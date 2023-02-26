@@ -1,1 +1,1 @@
-# TicTacToe
+# TicTacToe in JS! First app!
