@@ -1,6 +1,10 @@
 const tiles = document.querySelectorAll(".tile");
 const statusText = document.querySelector("#statusText");
 const resetButton = document.querySelector("#resetButton");
+const multiButton = document.querySelector("#multiplayerButton");
+const compButton = document.querySelector("#computerButton");
+
+let compMode;
 
 const winConditions = [
     [0,1,2],
@@ -22,6 +26,8 @@ initGame();
 function initGame(){
     tiles.forEach(tile => tile.addEventListener("click", tileClicked));
     resetButton.addEventListener("click",reset);
+    multiButton.addEventListener("click",multiSetup);
+    compButton.addEventListener("click",compSetup);
     statusText.textContent = currPlayer + "'s turn!";
     running = true;
     console.log("Init");
@@ -85,4 +91,22 @@ function reset(){
     statusText.textContent = currPlayer + "'s turn!";
     tiles.forEach(tile => tile.textContent = "");
     running = true;
+}
+
+function multiSetup(){
+    console.log("Setting up multi");
+    multiButton.disabled = true;
+    compButton.disabled = true;
+    tiles.forEach(tile => tile.disabled = false);
+    resetButton.disabled = false;
+    compMode = false;
+}
+
+function compSetup(){
+    console.log("Setting up comp");
+    multiButton.disabled = true;
+    compButton.disabled = true;
+    tiles.forEach(tile => tile.disabled = false);
+    resetButton.disabled = false;
+    compMode = true;
 }
