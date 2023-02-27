@@ -1,17 +1,31 @@
+body{
+    background-color: aliceblue;
+    max-width:fit-content;
+    max-height: min-content;
+    text-align: center;
+}
+
 .tile{
     width: 180px;
     height: 180px;
     border: 5px solid;
     box-shadow: 0 0 0 3px;
     line-height: 160px;
-    font-size: 50px;
+    font-size: 70px;
     text-align: center;
     cursor: pointer;
 }
 
 #gameContainer{
     text-align: center;
-    font-family: Verdana;
+    font-family: Geneva;
+}
+
+#statusText{
+    position: absolute;
+    left: 810px;
+    top: 350px;
+    font-size: 100px;
 }
 
 #boardContainer{
@@ -25,6 +39,38 @@
     text-align: center;
     font-size: 50px;
     font-family: Impact;
-    color:azure;
+    color:black;
+    background-color: white;
+    box-shadow: 0 0 0 4px;
     cursor: pointer;
+    margin-top: 30px;
+}
+
+#modeChoice{
+    position: absolute;
+    left: 800px;
+    top: 50px;
+    text-align: center;
+    font-family: Georgia;
+    font-size: 40px;
+}
+
+#multiplayerButton{
+    text-align: center;
+    font-size: 20px;
+    box-shadow: 0 0 0 4px;
+    color: black;
+    background-color: white;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+#computerButton{
+    text-align: center;
+    font-size: 20px;
+    box-shadow: 0 0 0 4px;
+    color: black;
+    background-color: white;
+    cursor: pointer;
+    margin-left: 10px;
 }
