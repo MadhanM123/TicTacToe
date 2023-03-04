@@ -36,12 +36,20 @@ function initGame(){
 }
 
 function tileClicked(){
-    console.log("Clicked");
-    const tileInd = this.getAttribute("tileIndex");
+    let tileInd = this.getAttribute("tileIndex");
     if(board[tileInd] != "" || !running){
         return;
     }
     updateTile(this,tileInd);
+    const s = checkState();
+    if(!compMode || s == 0 || s == 1){
+        return;
+    }
+
+    //Computer mode
+    minimax(currPlayer,board);
+    console.log(choice);
+    updateTile(document.getElementById("t" + choice),choice);
     checkState();
 }
 
@@ -80,12 +88,15 @@ function checkState(){
 
     if(boardState(currPlayer)){
         statusText.textContent = currPlayer + " wins!";
+        return 1;
     }
     else if(!board.includes("")){
         statusText.textContent = "It's a draw!";
+        return 0;
     }
     else{
         changePlayer();
+        return 2;
     }
 }
 
@@ -112,11 +123,11 @@ function altPlayer(player){
     return ("X" == player) ? "O" : "X";
 }
 
-function moveMin(arr){
+function scoreMin(arr){
     let ind = 0;
 
     for(let i = 1; i < arr.length; i++){
-        if(arr[i].score < arr[ind].score){
+        if(arr[i] < arr[ind]){
             ind = i;
         }
     }
@@ -124,11 +135,11 @@ function moveMin(arr){
     return ind;
 }
 
-function moveMax(arr){
+function scoreMax(arr){
     let ind = 0;
 
     for(let i = 1; i < arr.length; i++){
-        if(arr[i].score > arr[ind].score){
+        if(arr[i] > arr[ind]){
             ind = i;
         }
     }
@@ -147,21 +158,31 @@ function compSetup(){
     compMode = true;
 }
 
-function compControl(){
-    let move = minimax(currPlayer,board);
-    updateTile()
+function compBoardState(player,game){
+    let won  = false;
+    
+    for(let i = 0; i < winConditions.length; i++){
+        const condition = winConditions[i];
+        const tile1 = game[condition[0]];
+        const tile2 = game[condition[1]];
+        const tile3 = game[condition[2]];
+        if(tile1 == "" || tile2 == "" || tile3 == ""){
+            continue;
+        }
+        else if(tile1 == tile2 && tile2 == tile3 && tile1 == player){
+            won = true;
+            break;
+        }
+    }
+    return won;
+
 }
 
-function findMove(){
-    let move = minimax(currPlayer,board);
-
-}
-
-function compScore(player){
-    if(boardState(player)){
+function compScore(player,game){
+    if(compBoardState(player,game)){
         return 10;
     }
-    else if(boardState(altPlayer(player))){
+    else if(compBoardState(altPlayer(player),game)){
         return -10;
     }
     else{
@@ -169,38 +190,37 @@ function compScore(player){
     }
 }
 
+var choice;
+
 function minimax(player,game){
-    if(!game.includes("")) return compScore(player);
+    if(!game.includes("")){
+        return compScore(player,game);
+    }
 
     let moves = [];
-    let moveScores = [];
-    let temp = []; 
-    let move = {};
+    let scores = [];
 
     for(let i = 0; i < game.length; i++){
-        if(game[i] == ""){
+        if(game[i] != ""){
             continue;
         }
-        move.ind = i;
-        temp = game.slice(0);
-        temp[i] = player;
-        let result = minimax(altPlayer(player),temp);
-
-        move.score = result.score;
-        moves.push(move);
+        game[i] = player;
+        result = minimax(altPlayer(player),game);
+        scores.push(result);
+        game[i] = "";
+        moves.push(i);
     }
 
     let ind;
-    let choice;
     if(currPlayer == player){
-        ind = moveMax(moves);
-        choice = moves[ind].ind;
+        ind = scoreMax(scores);
+        choice = moves[ind];
     }
     else{
-        ind = moveMin(moves);
-        choice = moves[ind].ind;
+        ind = scoreMin(scores);
+        choice = moves[ind];
     }
 
-    return moves[choice];
+    return scores[ind];
 }
 
