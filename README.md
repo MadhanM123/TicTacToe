@@ -1,1 +1,0 @@
-# TicTacToe in JS! First app!
