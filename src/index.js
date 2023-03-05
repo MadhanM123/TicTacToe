@@ -47,9 +47,9 @@ function tileClicked(){
     }
 
     //Computer mode
-    minimax(currPlayer,board);
-    console.log(choice);
-    updateTile(document.getElementById("t" + choice),choice);
+    let c = bestSpot();
+    console.log(c);
+    updateTile(document.getElementById("t" + c),c);
     checkState();
 }
 
@@ -192,35 +192,100 @@ function compScore(player,game){
 
 var choice;
 
-function minimax(player,game){
-    if(!game.includes("")){
-        return compScore(player,game);
+// function minimax(player,game){
+//     if(!game.includes("")){
+//         return compScore(player,game);
+//     }
+
+//     let moves = [];
+//     let scores = [];
+
+//     for(let i = 0; i < game.length; i++){
+//         if(game[i] != ""){
+//             continue;
+//         }
+//         game[i] = player;
+//         result = minimax(altPlayer(player),game);
+//         scores.push(result);
+//         game[i] = "";
+//         moves.push(i);
+//     }
+
+//     let ind;
+//     if(currPlayer == player){
+//         ind = scoreMax(scores);
+//         choice = moves[ind];
+//     }
+//     else{
+//         ind = scoreMin(scores);
+//         choice = moves[ind];
+//     }
+
+//     return scores[ind];
+// }
+
+function bestSpot() {
+    return minimax(board,currPlayer).index;
+}
+
+function minimax(board,player){
+    if(player == currPlayer){
+        if(compBoardState(player,board)){
+            return {score : 10};
+        }
+        else if(compBoardState(altPlayer(player),board)){
+            return {score : -10};
+        }
+        else if(!board.includes("")){
+            return {score : 0};
+        }
+
+    }
+    else if(player != currPlayer){
+        if(compBoardState(player,board)){
+            return {score : -10};
+        }
+        else if(compBoardState(altPlayer(player),board)){
+            return {score : 10};
+        }
+        else if(!board.includes("")){
+            return {score : 0};
+        }
     }
 
     let moves = [];
-    let scores = [];
+    for(let i = 0; i < board.length; i++){
+        if(board[i] != "") continue;
+        let move = {};
+        move.index = i;
+        board[i] = player;
+        let result = minimax(board,altPlayer(player));
+        move.score = result.score;
 
-    for(let i = 0; i < game.length; i++){
-        if(game[i] != ""){
-            continue;
-        }
-        game[i] = player;
-        result = minimax(altPlayer(player),game);
-        scores.push(result);
-        game[i] = "";
-        moves.push(i);
+        board[i] = "";
+        moves.push(move);
     }
 
-    let ind;
-    if(currPlayer == player){
-        ind = scoreMax(scores);
-        choice = moves[ind];
+    let bestMove;
+    if(player == currPlayer){
+        let bestScore = -11;
+        for(let i = 0; i < moves.length; i++){
+            if(moves[i].score > bestScore){
+                bestScore = moves[i].score;
+                bestMove = i;
+            }
+        }
     }
     else{
-        ind = scoreMin(scores);
-        choice = moves[ind];
+        let bestScore = 11;
+        for(let i = 0; i < moves.length; i++){
+            if(moves[i].score < bestScore){
+                bestScore = moves[i].score;
+                bestMove = i;
+            }
+        }
     }
 
-    return scores[ind];
+    return moves[bestMove];
 }
 
