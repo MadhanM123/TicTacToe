@@ -30,19 +30,23 @@ function initGame(){
     resetButton.addEventListener("click",reset);
     multiButton.addEventListener("click",multiSetup);
     compButton.addEventListener("click",compSetup);
-    statusText.textContent = currPlayer + "'s turn!";
+    statusText.textContent = "Pick a mode!";
     running = true;
     console.log("Init");
 }
 
 function tileClicked(){
+    console.log("here")
     let tileInd = this.getAttribute("tileIndex");
     if(board[tileInd] != "" || !running){
         return;
     }
     updateTile(this,tileInd);
     const s = checkState();
-    if(!compMode || s == 0 || s == 1){
+    if(s != 2){
+        tiles.forEach(tile => tile.disabled = true);
+    }
+    if(!compMode){
         return;
     }
 
@@ -50,7 +54,9 @@ function tileClicked(){
     let c = bestSpot();
     console.log(c);
     updateTile(document.getElementById("t" + c),c);
-    checkState();
+    if(checkState() != 2){
+        tiles.forEach(tile => tile.disabled = true);
+    }
 }
 
 function updateTile(tile, tileInd){
@@ -104,9 +110,13 @@ function reset(){
     console.log("Resetting");
     currPlayer = "X";
     board = ["","","","","","","","",""];
-    statusText.textContent = currPlayer + "'s turn!";
     tiles.forEach(tile => tile.textContent = "");
-    running = true;
+    tiles.forEach(tile => tile.disabled = true);
+    resetButton.disabled = true;
+    compButton.disabled = false;
+    multiButton.disabled = false;
+    statusText.textContent = "Pick a mode!";
+    running = false;
 }
 
 function multiSetup(){
@@ -115,7 +125,9 @@ function multiSetup(){
     compButton.disabled = true;
     tiles.forEach(tile => tile.disabled = false);
     resetButton.disabled = false;
+    statusText.textContent = currPlayer + "'s turn!";
     compMode = false;
+    running = true;
 }
 
 //Helpers
@@ -155,7 +167,9 @@ function compSetup(){
     compButton.disabled = true;
     tiles.forEach(tile => tile.disabled = false);
     resetButton.disabled = false;
+    statusText.textContent = currPlayer + "'s turn!";
     compMode = true;
+    running = true;
 }
 
 function compBoardState(player,game){

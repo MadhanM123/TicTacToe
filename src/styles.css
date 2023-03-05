@@ -49,8 +49,8 @@ body{
 
 #modeChoice{
     position: absolute;
-    left: 800px;
-    top: 50px;
+    left: 900px;
+    top: 300px;
     text-align: center;
     font-family: Georgia;
     font-size: 40px;
@@ -58,17 +58,18 @@ body{
 
 #multiplayerButton{
     text-align: center;
-    font-size: 20px;
+    font-size: 40px;
     box-shadow: 0 0 0 4px;
     color: black;
     background-color: white;
     margin-right: 10px;
+    margin-left: -100px;
     cursor: pointer;
 }
 
 #computerButton{
     text-align: center;
-    font-size: 20px;
+    font-size: 40px;
     box-shadow: 0 0 0 4px;
     color: black;
     background-color: white;
